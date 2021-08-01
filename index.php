@@ -18,98 +18,108 @@ $message = mb_strtolower(($data['text'] ? $data['text'] : $data['data']),'utf-8'
 
 switch ($command) {
     case 'start':
-        # Обрабатываем сообщение
-switch ($message)
-{
-        case '/start':
-        case 'старт':
-        $method = 'sendMessage';
-        $send_data = [
-            'text'   => 'Введите номер базы:',
-            'reply_markup' => [
-                'resize_keyboard' => true,
-                'keyboard' => [
-                    [
-                        ['text' => $n_base],
-                    ],
-                    [
-                        ['text' => $n_base + 1],
-                        ['text' => $n_base + 2],
-                    ]
-                ]
-            ]
-        ];
         mysqli_query($db, "UPDATE `rascon` SET `value` = 'n_base' WHERE `key` = 'command'");
-        break;
-
-    case '/date':
-    case 'дата':
-        $method = 'sendMessage';
-        $send_data = [
-            'text'   => 'Введите дату:',
-            'reply_markup' => [
-                'resize_keyboard' => true,
-                'keyboard' => [
-                    [
-                        ['text' => date ( 'd.m.Y' )],
-                    ],
-                    [
-                        ['text' => date ( 'd.m.Y', time() - 86400 )],
-                        ['text' => date ( 'd.m.Y', time() + 86400 )],
+        # Обрабатываем сообщение
+        switch ($message)
+        {
+            case '/start':
+            case 'старт':
+            $method = 'sendMessage';
+            $send_data = [
+                'text'   => 'Введите номер базы:',
+                'reply_markup' => [
+                    'resize_keyboard' => true,
+                    'keyboard' => [
+                        [
+                            ['text' => $n_base],
+                        ],
+                        [
+                            ['text' => $n_base + 1],
+                            ['text' => $n_base + 2],
+                        ]
                     ]
                 ]
-            ]
-        ];
+            ];
+            break;
+
+            default:
+                $method = 'sendMessage';
+                $send_data = [
+                    'text' => 'Старт'
+                ];
+        }
         break;
 
-    case 'текст':
-        $method = 'sendMessage';
-        $send_data = [
-            'text'   => 'Вот мой ответ'
-        ];
-        break;
+    case 'n_base':
+        mysqli_query($db, "UPDATE `rascon` SET `value` = '$message' WHERE `key` = 'n_base'");
+        mysqli_query($db, "UPDATE `rascon` SET `value` = 'date_base' WHERE `key` = 'command'");
+            $method = 'sendMessage';
+            $send_data = [
+                    'text'   => 'Введите дату:',
+                    'reply_markup' => [
+                        'resize_keyboard' => true,
+                        'keyboard' => [
+                            [
+                                ['text' => date ( 'd.m.Y' )],
+                            ],
+                            [
+                                ['text' => date ( 'd.m.Y', time() - 86400 )],
+                                ['text' => date ( 'd.m.Y', time() + 86400 )],
+                            ]
+                        ]
+                    ]
+            ];
+    break;
 
-    default:
-        $method = 'sendMessage';
-        $send_data = [
-            'text' => 'Не понимаю о чем Вы :('
-        ];
-}
-        break;
-
-    case 'base':
-        # code...
-        break;
-
-    case 'date':
-        # code...
-        break;
+    case 'date_base':
+        mysqli_query($db, "UPDATE `rascon` SET `value` = '$message' WHERE `key` = 'date_base'");
+        mysqli_query($db, "UPDATE `rascon` SET `value` = 'url_zp' WHERE `key` = 'command'");
+                $method = 'sendMessage';
+                $send_data = [
+                    'text'   => 'Введите ccылку для ZP:',
+                ];
+    break;
 
     case 'url_zp':
-        # code...
+        mysqli_query($db, "UPDATE `rascon` SET `value` = '$message' WHERE `key` = 'url_zp'");
+        mysqli_query($db, "UPDATE `rascon` SET `value` = 'url_exe' WHERE `key` = 'command'");
+                $method = 'sendMessage';
+                $send_data = [
+                    'text'   => 'Введите ccылку для EXE:',
+                ];
         break;
 
     case 'url_exe':
-        # code...
-        break;
-
-    case 'base':
-        # code...
-        break;
+        mysqli_query($db, "UPDATE `rascon` SET `value` = '$message' WHERE `key` = 'url_exe'");
+        mysqli_query($db, "UPDATE `rascon` SET `value` = 'start' WHERE `key` = 'command'");
+            $method = 'sendMessage';
+            $send_data = [
+                    'text'   => 'Конец. Вывести данные',
+                    'reply_markup' => [
+                        'resize_keyboard' => true,
+                        'keyboard' => [
+                            [
+                                ['text' => 'Старт'],
+                            ]
+                        ]
+                    ]
+            ];
+    break;
     
     default:
-        # code...
+        mysqli_query($db, "UPDATE `rascon` SET `value` = 'start' WHERE `key` = 'command'");
+        $method = 'sendMessage';
+        $send_data = [
+                'text' => 'Старт',
+                'reply_markup' => [
+                        'resize_keyboard' => true,
+                        'keyboard' => [
+                            ['text' => 'Старт'],
+                        ]
+                ]
+            ];
         break;
 }
-
-
-
-if (apcu_fetch('command') === 'base') {
-    mysqli_query($db, "UPDATE `rascon` SET `value` = '$message' WHERE `key ` = 'n_base'");
-}
-
-
-
 
 # Добавляем данные пользователя
 $send_data['chat_id'] = $data['chat']['id'];
