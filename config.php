@@ -4,9 +4,9 @@
 $data = json_decode(file_get_contents('php://input'), TRUE);
 file_put_contents('file.txt', '$data: '.print_r($data, 1)."\n", FILE_APPEND);
 
-$db = mysqli_connect("localhost","serdjio_bot","szBkENC3F6u7DjD","serdjio_bot");
+$db = mysqli_connect("localhost","33","22","11");
 
 # Важные константы
-define('TOKEN', '1238464690:AAERGsopzqudPJXbb7ccfdA9OtG8tJ4MPXI');
+define('TOKEN', '44');
 
-//https://api.telegram.org/bot1238464690:AAERGsopzqudPJXbb7ccfdA9OtG8tJ4MPXI/setwebhook?url=https://2smm.ru/index.php
+//https://api.telegram.org/bot55
