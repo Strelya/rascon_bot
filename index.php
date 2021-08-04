@@ -83,6 +83,7 @@ switch ($command) {
     case 'url_zp':
         mysqli_query($db, "UPDATE `rascon` SET `value` = '$message' WHERE `key` = 'url_zp'");
         mysqli_query($db, "UPDATE `rascon` SET `value` = 'url_exe' WHERE `key` = 'command'");
+        include("download_zp.php");
                 $method = 'sendMessage';
                 $send_data = [
                     'text'   => 'Введите ccылку для EXE:',
@@ -92,6 +93,7 @@ switch ($command) {
     case 'url_exe':
         mysqli_query($db, "UPDATE `rascon` SET `value` = '$message' WHERE `key` = 'url_exe'");
         mysqli_query($db, "UPDATE `rascon` SET `value` = 'start' WHERE `key` = 'command'");
+        include("download_exe.php");
             $method = 'sendMessage';
             $send_data = [
                     'text'   => 'Конец. Вывести данные',
